@@ -14,9 +14,6 @@ module CSVImporter
     options.each do |k,v|
       @config[k.to_sym] = v if @valid_config_keys.include? k.to_sym
     end
-
-    puts "*"*50, "MYCONFIG", "*"*50
-    p config
   end
 
   # Configure through yaml file
