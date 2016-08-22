@@ -1,12 +1,15 @@
-require 'yaml'
+require "yaml"
+require "rails"
 
 module CSVImporter
   @config = {
+    file_loader: { loader: :file_system, path: "#{::Rails.root}/public/" },
+    history_loader: { loader: :file, path: "tmp/csv_import_history" }
   }
 
   @valid_config_keys = %I[
-    csv_importer_file_loader
-    csv_importer_store_history
+    file_loader
+    history_loader
   ]
 
   # Configure through hash
@@ -14,6 +17,8 @@ module CSVImporter
     options.each do |k,v|
       @config[k.to_sym] = v if @valid_config_keys.include? k.to_sym
     end
+
+    @config
   end
 
   # Configure through yaml file
