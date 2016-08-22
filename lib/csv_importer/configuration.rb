@@ -3,7 +3,7 @@ require "rails"
 
 module CSVImporter
   @config = {
-    file_loader: { loader: :file_system, path: "#{::Rails.root}/public/" },
+    file_loader: { loader: :file_system, path: "#{Rails.root}public/" },
     history_loader: { loader: :file, path: "tmp/csv_import_history" }
   }
 
