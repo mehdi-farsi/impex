@@ -12,7 +12,7 @@ module CSVImporter
     def initialize(config = {})
       @config = config
 
-      @file_loaders = ActiveSupport::HashWithIndifferentAccess.new
+      @file_loaders = ::ActiveSupport::HashWithIndifferentAccess.new
       setup_file_loaders
     end
 
@@ -38,10 +38,10 @@ module CSVImporter
     end
 
     def setup_file_loaders
-      Dir.glob(File.join(File.dirname(__FILE__), 'file_loaders/*.rb')).each do |file|
+      ::Dir.glob(::File.join(::File.dirname(__FILE__), 'file_loaders/*.rb')).each do |file|
         /(?<klass>\w+)\.rb/ =~ file
 
-        @file_loaders[klass] = "::CSVImporter::FileLoader::#{klass.classify}".constantize
+        @file_loaders[klass] = "::CSVImporter::FileLoader::#{klass.camelize}".constantize
       end
     end
   end
