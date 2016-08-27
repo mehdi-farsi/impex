@@ -4,12 +4,12 @@ require "rails"
 module CSVImporter
   @config = {
     file_loader: { loader: :file_system, path: "#{Rails.root}public/" },
-    history_loader: { loader: :file, path: "tmp/csv_import_history" }
+    history_manager: { manager: :active_record, table: "csv_importer_histories" }
   }
 
   @valid_config_keys = %I[
     file_loader
-    history_loader
+    history_manager
   ]
 
   # Configure through hash

@@ -3,6 +3,10 @@ Dir.glob(File.join(File.dirname(__FILE__), 'file_loaders/*.rb')) do |f|
   require f
 end
 
+Dir.glob(File.join(File.dirname(__FILE__), 'history_managers/*.rb')) do |f|
+  require f
+end
+
 require "active_support/hash_with_indifferent_access"
 
 module CSVImporter
@@ -12,16 +16,19 @@ module CSVImporter
     def initialize(config = {})
       @config = config
 
-      @file_loaders = ::ActiveSupport::HashWithIndifferentAccess.new
+      @file_loaders     = ::ActiveSupport::HashWithIndifferentAccess.new
+      @history_managers = ::ActiveSupport::HashWithIndifferentAccess.new
+
       setup_file_loaders
+      setup_history_managers
     end
 
     def file_loader
       lookup_for_file_loader
     end
 
-    def history_loader
-      lookup_for_history_loader
+    def history_manager
+      lookup_for_history_manager
     end
 
     private
@@ -34,7 +41,13 @@ module CSVImporter
       klass.new(@config[:file_loader])
     end
 
-    def lookup_for_history_loader
+    def lookup_for_history_manager
+      klass = @history_managers[@config[:history_manager][:manager]]
+
+      raise CSVImporter::HistoryManager::UnknownHistoryManagerError,
+            "undefined class #{@config[:history_manager][:manager].to_s.camelize}" if klass.nil?
+
+      klass.new(@config[:history_manager])
     end
 
     def setup_file_loaders
@@ -42,6 +55,14 @@ module CSVImporter
         /(?<klass>\w+)\.rb/ =~ file
 
         @file_loaders[klass] = "::CSVImporter::FileLoader::#{klass.camelize}".constantize
+      end
+    end
+
+    def setup_history_managers
+      ::Dir.glob(::File.join(::File.dirname(__FILE__), 'history_managers/*.rb')).each do |file|
+        /(?<klass>\w+)\.rb/ =~ file
+
+        @history_managers[klass] = "::CSVImporter::HistoryManager::#{klass.camelize}".constantize
       end
     end
   end

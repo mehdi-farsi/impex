@@ -15,8 +15,9 @@ module CSVImporter
         file = CSVImporter::File.new(csv_file, file_config)
 
         ::CSV.read(csv_file, headers: true).each do |row|
-          file << CSVImporter::Row.new(row, file_config)
+          file << CSVImporter::Row.new(row.to_h, file_config)
         end
+        file
       end
 
       def find_table_name(filename)
