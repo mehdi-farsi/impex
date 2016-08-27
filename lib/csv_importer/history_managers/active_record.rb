@@ -4,7 +4,7 @@ module CSVImporter
   module HistoryManager
     class ActiveRecord < Base
       def filter_data_with_history(row)
-        reference = row.columns.delete("reference")
+        reference = row.columns["reference"]
         select_column = row.columns.keys.join(", ")
 
         query = <<-SQL.gsub(/[\n\t\s]+/, ' ')
@@ -15,16 +15,16 @@ module CSVImporter
             AND cih.`table`=#{connection.quote(row.table)};
         SQL
 
-        records = connection.execute(query, { as: :array, cast: true }).to_a
+        records = connection.execute(query, { as: :array, cast: false }).to_a
         return row if records.empty?
 
         history = Hash.new { |h, k| h[k] = [] }
-        records.map { |k, v| history[k] << v }
+
+        records.each { |record| history[record["key"]] << record["value"] }
 
         row.columns.each do |column_name, column_value|
           row.columns.delete(column_name) if history[column_name].include?(column_value)
         end
-        row.columns.merge(reference: reference)
         row
       end
 
@@ -32,17 +32,28 @@ module CSVImporter
         reference = row.columns.delete("reference")
         return if row.columns.empty?
 
-        columns_name = row.columns.keys.sort
         records = []
+        fields = row.columns.keys.join(", ")
 
-        query = "INSERT INTO csv_importer_histories (#{connection.quote(columns.map(&:to_s).join(", "))}) VALUES"
+        query = <<-SQL.gsub(/[\n\t\s]+/, ' ')
+          INSERT INTO
+          csv_importer_histories
+          (`reference`, `table`, `key`, `value`)
+          VALUES
+        SQL
 
-        puts query
+        row.columns.each do |column_name, column_value|
+          values = [
+            reference,
+            row.table,
+            column_name, column_value].map do |value|
+              connection.quote(value)
+            end.join(',')
+          records << "(#{values})"
+        end
 
-        # row.columns
-
-        # records =
-        # connection.execute()
+        query << "#{records.join(',')};"
+        connection.execute(query)
       end
 
       private

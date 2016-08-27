@@ -14,20 +14,19 @@ module CSVImporter
       @files = @files_loader.load
 
       @files.each do |file|
-        model  = file.table
+        model = file.table
 
         file.each do |row|
             # the user can re-organize each row before saving.
             row = yield(row) if block_given?
 
-            reference = row.columns.delete("reference")
-            row = @history_manager.filter_data_with_history(reference, row)
+            row = @history_manager.filter_data_with_history(row)
 
-            record = model.find_or_initilize_by!(row.columns["reference"])
+            record = model.find_or_initialize_by(reference: row.columns["reference"])
+            byebug
+            record.update!(row.columns.except(["reference"]))
 
-            record.update()
-
-            history_manager.update_history(rerow)
+            @history_manager.update_history(row)
         end
       end
     end
