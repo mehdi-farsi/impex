@@ -23,12 +23,20 @@ module CSVImporter
             row = @history_manager.filter_data_with_history(row)
 
             record = model.find_or_initialize_by(reference: row.columns["reference"])
-            byebug
-            record.update!(row.columns.except(["reference"]))
+
+            insert_row(record, row.columns.except(["reference"]))
 
             @history_manager.update_history(row)
         end
       end
+    end
+
+    private
+    # override this method to change the insertion behavior.
+    # For example. you can skip validations for some specific models, etc..
+    # 
+    def insert_row(record, columns)
+      record.update!(columns)
     end
 
     class << self
