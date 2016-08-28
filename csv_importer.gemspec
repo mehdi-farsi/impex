@@ -5,12 +5,12 @@ require 'csv_importer/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "csv_importer"
-  spec.version       = CsvImporter::VERSION
+  spec.version       = CSVImporter::VERSION
   spec.date          = Time.now.strftime("%F")
   spec.authors       = ["Mehdi FARSI"]
   spec.email         = ["mehdifarsi.pro@gmail.com"]
 
-  spec.summary       = "An idempotent CSV-to-DB importer"
+  spec.summary       = "An idempotent CSV import system"
   spec.homepage      = "https://github.com/mehdi-farsi/csv_importer"
   spec.license       = "MIT"
 
