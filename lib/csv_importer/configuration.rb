@@ -4,12 +4,14 @@ require "rails"
 module CSVImporter
   @config = {
     file_loader: { loader: :file_system, path: "#{Rails.root}public/" },
-    history_manager: { manager: :active_record, table: "csv_importer_histories" }
+    history_manager: { manager: :active_record, table: "csv_importer_histories" },
+    history_whitelisting: ::ActiveSupport::HashWithIndifferentAccess.new
   }
 
   @valid_config_keys = %I[
     file_loader
     history_manager
+    history_whitelisting
   ]
 
   # Configure through hash
@@ -19,19 +21,6 @@ module CSVImporter
     end
 
     @config
-  end
-
-  # Configure through yaml file
-  def self.configure_with(path_to_yaml_file)
-    begin
-      config = YAML::load(IO.read(path_to_yaml_file))
-    rescue Errno::ENOENT
-      log(:warning, "YAML configuration file couldn't be found. Using defaults."); return
-    rescue Psych::SyntaxError
-      log(:warning, "YAML configuration file contains invalid syntax. Using defaults."); return
-    end
-
-    configure(config)
   end
 
   def self.config

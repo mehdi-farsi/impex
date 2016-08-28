@@ -6,16 +6,19 @@ module CSVImporter
       def filter_data_with_history(row)
         reference = row.columns["reference"]
         select_column = row.columns.keys.join(", ")
+        whitelist = @whitelist[row.table]
 
         query = <<-SQL.gsub(/[\n\t\s]+/, ' ')
           SELECT *
           FROM csv_importer_histories AS cih
           WHERE
-            cih.`reference`=#{connection.quote(reference)}
-            AND cih.`table`=#{connection.quote(row.table)};
+            cih.`reference`=#{quote(reference)}
+            AND cih.`table`=#{quote(row.table)}
         SQL
 
-        records = connection.execute(query, { as: :array, cast: false }).to_a
+        query << "AND cih.`key` IN (#{quote(whitelist).join(',')})" unless whitelist.nil? || whitelist.empty?
+
+        records = connection.exec_query(query).to_hash
         return row if records.empty?
 
         history = Hash.new { |h, k| h[k] = [] }
@@ -32,9 +35,6 @@ module CSVImporter
         reference = row.columns.delete("reference")
         return if row.columns.empty?
 
-        records = []
-        fields = row.columns.keys.join(", ")
-
         query = <<-SQL.gsub(/[\n\t\s]+/, ' ')
           INSERT INTO
           csv_importer_histories
@@ -42,23 +42,40 @@ module CSVImporter
           VALUES
         SQL
 
+        records = []
         row.columns.each do |column_name, column_value|
+          next unless whitelist_include?(row.table, column_name)
           values = [
             reference,
             row.table,
-            column_name, column_value].map do |value|
-              connection.quote(value)
-            end.join(',')
+            column_name, column_value
+          ].map { |value| quote(value) }.join(',')
+
           records << "(#{values})"
         end
 
         query << "#{records.join(',')};"
-        connection.execute(query)
+        connection.execute(query) unless records.empty?
       end
 
       private
+      def whitelist_include?(table, key)
+        # if list not provided then accept any fields
+        return true if @whitelist[table].nil? || @whitelist[table].empty?
+        return true if @whitelist[table].map(&:to_s).include?(key.to_s)
+        false
+      end
+
       def connection
         @ar_connection ||= ::ActiveRecord::Base.connection
+      end
+
+      def quote(value)
+        if value.is_a? Array
+          value.map { |v| connection.quote(v) }
+        else
+          connection.quote(value)
+        end
       end
     end
   end

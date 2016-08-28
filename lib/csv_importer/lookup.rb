@@ -47,7 +47,7 @@ module CSVImporter
       raise CSVImporter::HistoryManager::UnknownHistoryManagerError,
             "undefined class #{@config[:history_manager][:manager].to_s.camelize}" if klass.nil?
 
-      klass.new(@config[:history_manager])
+      klass.new(@config)
     end
 
     def setup_file_loaders
