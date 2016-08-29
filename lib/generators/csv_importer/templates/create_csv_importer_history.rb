@@ -1,4 +1,4 @@
-class CreateCsvImporterHistory < ActiveRecord::Migration
+class CreateCsvImporterHistories < ActiveRecord::Migration
   def change
     create_table :csv_importer_histories do |t|
       t.column :reference, :string

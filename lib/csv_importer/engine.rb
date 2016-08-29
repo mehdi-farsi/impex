@@ -17,16 +17,16 @@ module CSVImporter
         model = file.table
 
         file.each do |row|
-            # the user can re-organize each row before saving.
-            row = yield(row) if block_given?
+          # the user can re-organize each row before saving.
+          row = yield(row) if block_given?
 
-            row = @history_manager.filter_data_with_history(row)
+          row = @history_manager.filter_data_with_history(row)
 
-            record = model.find_or_initialize_by(reference: row.columns["reference"])
+          record = model.find_or_initialize_by(reference: row.columns["reference"])
 
-            insert_row(record, row.columns.except(["reference"]))
+          insert_row(record, row.columns.except(["reference"]))
 
-            @history_manager.update_history(row)
+          @history_manager.update_history(row)
         end
       end
     end
@@ -34,7 +34,6 @@ module CSVImporter
     private
     # override this method to change the insertion behavior.
     # For example. you can skip validations for some specific models, etc..
-    # 
     def insert_row(record, columns)
       record.update!(columns)
     end

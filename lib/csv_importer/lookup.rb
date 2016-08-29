@@ -11,7 +11,7 @@ require "active_support/hash_with_indifferent_access"
 
 module CSVImporter
   class Lookup
-    attr_reader :config, :file_loader, :history_backup_system
+    attr_reader :config, :file_loaders, :history_managers
 
     def initialize(config = {})
       @config = config
