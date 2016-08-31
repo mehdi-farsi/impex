@@ -56,10 +56,49 @@ The rake task `csv_importer:all` iterates through each file available in the `pa
 
 ## Extend functionality
 
-#### Internals
+### Internals
 
+The project is based on the principle of "composition over inheritance". There is 3 main entities in the project: the core, the `FileLoader` system and the `HistoryManager` system.
 
-###Contact
+#### FileLoader
+
+The `FileLoader` is in charge of fetching and converting CSV files into a format that the `csv_importer` can consume.
+The project provide one file loader by default: `CSVImporter::FileLoader::FileSystem`.
+
+If you want to add a new `FileLoader` (e.g `FileLoader::FileLoader::S3`), you can create a new class that inherits from `CSVImporter::FileLoader::Base` and implements the instance method `#load` that returns an array of `CSVImporter::File`.
+
+In order to ease the convertion of the CSV file to a format that is consumable by the `csv_importer`, the project provides a `CSVImporter::FileFormatter.build(INSTANCE_OF_FILE_CLASS)` method that takes an instance of the ruby `File` class anf returns a `CSVImporter::File`.
+
+#### HistoryManager
+
+The `HistoryManager` is in charge of filter csv columns by maintaining an history of the value used in past for each column.
+The project provide one history manager by default: `CSVImporter::HistoryManager::ActiveRecord`.
+
+If you want to add a new `HistoryManager` (e.g `FileLoader::HistoryManager::Redis`), you can create a new class that inherits from `CSVImporter::HistoryManager::Base` and implements the instance methods `#filter_data_with_history(row)` and `#update_history(row)`.
+
+Once a new `FileLoader` or `HistoryManager` is added to the project then you can choose it by providing a config (configs name have to be in `underscore` syntax)
+
+```ruby
+file_loader: { loader: :s3, path: "#{Rails.root}public/" },
+history_manager: { manager: :redis, table: "csv_importer_histories" }
+```
+
+### Hooks
+
+The entry point of the project is the method `CSVImporter::Engine.run`. This method accepts a block. The block (that takes a `CSVImporter::Row` instance as parameter) is used just before history checks and insertion of each row.
+
+So you can re-arrange the mapping of the row (recall: each header value has to correspond to a table column name)
+
+```ruby
+CSVImporter::Engine.run do |row|
+  if row.table == "users"
+    row.columns[:email] = row.columns.delete('Company email')
+    # ...
+  end
+end
+```
+
+### Contact
 
 Thanks for reading.
 
