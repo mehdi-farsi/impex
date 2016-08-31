@@ -85,7 +85,7 @@ history_manager: { manager: :redis, table: "csv_importer_histories" }
 
 ### Hooks
 
-The entry point of the project is the method `CSVImporter::Engine.run`. This method accepts a block. The block (that takes a `CSVImporter::Row` instance as parameter) is used just before history checks and insertion of each row.
+The entry point of the project is the method `CSVImporter::Engine.run`. This method accepts a block. The block (that takes a `CSVImporter::Row` instance as parameter) is called just before history checks and insertion of each row.
 
 So you can re-arrange the mapping of the row (recall: each header value has to correspond to a table column name)
 
@@ -97,6 +97,8 @@ CSVImporter::Engine.run do |row|
   end
 end
 ```
+
+by overriding the method `CSVImporter::Engine#insert_row(record, row)` you can manage the way to update the record according to the filtered row. 
 
 ### Contact
 
