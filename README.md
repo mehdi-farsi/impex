@@ -1,9 +1,5 @@
 # CsvImporter
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/csv_importer`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
-
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -16,26 +12,58 @@ And then execute:
 
     $ bundle
 
-Or install it yourself as:
-
-    $ gem install csv_importer
-
 ## Usage
 
-TODO: Write usage instructions here
+```ruby
+?> rails g csv_importer:install
+?> rake db:migrate
+?> rake csv_importer:all
+```
 
-## Development
+## How it Works
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+By default, `csv_importer` looks for CSV files in `public/csv_import/TABLE_NAME/*.csv`. `TABLE_NAME` stands for the name of table (e.g: `users`, ...). Each file may require a header that contains the exact name of the field. If it's not the case, a [hook]() is provided to re-organize the mapping of the file before check. 
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+Before the update of a field, `csv_importer` will check if csv column value has never been a value of the table field (e.g: Update the email only if has never been an email of the person).
 
-## Contributing
+However, it's possible to custom the list of field to look up via a `whitelisting` [config](). 
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/csv_importer.
+# Tools
+
+The gem provides 2 tools: a rake tasks and a rails generator.
+
+The rails generator `csv_importer:install` provides 2 files:
+
+```shell
+$ rails g csv_importer:install
+  create  config/initializers/csv_importer.rb
+  create  db/migrate/20160831080017_create_csv_importer_histories.rb
+```
+
+The `csv_importer.rb` initializer permits to manage the path of the CSV files and the whitelisting for the history.
+
+```ruby
+CSVImporter.configure({
+  file_loader: { loader: :file_system, path: "#{Rails.root}public/" },
+  history_whitelisting: {
+    buildings: [:manager_name],
+    people:    [:email, :phone_number, :cell_phone, :address]
+  }
+})
+```
+
+The rake task `csv_importer:all` iterates through each file available in the `path` defined in config.
+
+## Extend functionality
+
+#### Internals
 
 
-## License
+###Contact
 
-The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
+Thanks for reading.
+
+[Twitter](https://twitter.com/farsi_mehdi)<br/>
+[GitHub](https://github.com/mehdi-farsi/)<br/>
+[LinkedIn](https://fr.linkedin.com/in/mehdifarsi)<br/>
 
