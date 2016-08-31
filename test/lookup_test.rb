@@ -13,21 +13,6 @@ class LookupTest < Minitest::Test
     Building.destroy_all
   end
 
-  #####################
-  # instance variables
-  #####################
-
-  def test_instance_variables_are_set
-    assert @lookup.config == config_test
-
-    assert_instance_of ActiveSupport::HashWithIndifferentAccess, @lookup.file_loaders
-    assert @lookup.file_loaders[:file_system] == "::CSVImporter::FileLoader::FileSystem"
-
-
-    assert_instance_of ActiveSupport::HashWithIndifferentAccess, @lookup.history_managers
-    assert @lookup.history_managers[:active_record] == "::CSVImporter::HistoryManager::ActiveRecord"
-  end
-
   ###############
   # file loaders
   ###############
@@ -36,9 +21,5 @@ class LookupTest < Minitest::Test
     assert_raises(CSVImporter::FileLoader::UnknownFileLoaderError) {
       @invalid_lookup.file_loader
     }
-  end
-
-  def test_loader_with_valid_file_loader_config_test
-    assert_instance_of CSVImporter::FileLoader::FileSystem, @lookup.file_loader
   end
 end

@@ -3,7 +3,7 @@ module CSVImporter
     def initialize(options = {})
     end
 
-    def run
+    def run(&block)
       @config = CSVImporter.config
 
       @lookup = CSVImporter::Lookup.new(@config)
@@ -18,7 +18,7 @@ module CSVImporter
 
         file.each do |row|
           # the user can re-organize each row before saving.
-          row = yield(row) if block_given?
+          row = block.call(row) if block
 
           row = @history_manager.filter_data_with_history(row)
 
@@ -39,8 +39,8 @@ module CSVImporter
     end
 
     class << self
-      def run(options = {})
-        CSVImporter::Engine.new(options).run
+      def run(options = {}, &block)
+        CSVImporter::Engine.new(options).run(&block)
       end
     end
   end
