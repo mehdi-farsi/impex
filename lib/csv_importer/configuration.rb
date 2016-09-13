@@ -5,7 +5,8 @@ module CSVImporter
   @config = {
     file_loader: { loader: :file_system, path: "#{Rails.root}public/" },
     history_manager: { manager: :active_record, table: "csv_importer_histories" },
-    history_whitelisting: {}
+    history_whitelisting: {},
+    history_references: {}
   }
 
   @valid_config_keys = %I[

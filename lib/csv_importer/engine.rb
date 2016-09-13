@@ -22,9 +22,12 @@ module CSVImporter
 
           row = @history_manager.filter_data_with_history(row)
 
-          record = model.find_or_initialize_by(reference: row.columns["reference"])
+          reference_column = @config[:history_references][row.table.to_sym] || "reference"
+          reference = row.columns[reference_column.to_s]
 
-          insert_row(record, row.columns.except(["reference"]))
+          record = model.find_or_initialize_by(reference_column => reference)
+
+          insert_row(record, row.columns.except([reference_column]))
 
           @history_manager.update_history(row)
         end

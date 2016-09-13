@@ -4,7 +4,7 @@ module CSVImporter
   module HistoryManager
     class ActiveRecord < Base
       def filter_data_with_history(row)
-        reference = row.columns["reference"]
+        reference = row.columns[@options[:history_references][row.table.to_sym].to_s || "reference"]
         select_column = row.columns.keys.join(", ")
         whitelist = @whitelist[row.table]
 
@@ -32,7 +32,7 @@ module CSVImporter
       end
 
       def update_history(row)
-        reference = row.columns.delete("reference")
+        reference = row.columns.delete(@options[:history_references][row.table.to_sym].to_s || "reference")
         return if row.columns.empty?
 
         query = <<-SQL.gsub(/[\n\t\s]+/, ' ')
