@@ -12,7 +12,7 @@ module CSVImporter
       # which contains a set of CSVImporter::Row accessible via :each method
       def load
         files = []
-        ::Dir.glob("#{::Rails.root}/#{@options[:path]}/csv_import/**/*.csv").each do |f|
+        ::Dir.glob("#{::Rails.root}/#{@options[:relative_path]}/csv_import/**/*.csv").each do |f|
           files << CSVImporter::FileFormatter.build(::File.open(f))
         end
         files

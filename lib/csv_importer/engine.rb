@@ -12,6 +12,7 @@ module CSVImporter
       @history_manager = @lookup.history_manager
 
       @files = @files_loader.load
+      byebug
 
       @files.each do |file|
         model = file.table

@@ -10,7 +10,7 @@ module CSVImporter
 
         query = <<-SQL.gsub(/[\n\t\s]+/, ' ')
           SELECT *
-          FROM csv_importer_histories AS cih
+          FROM #{history_table} AS cih
           WHERE
             cih.`reference`=#{quote(reference)}
             AND cih.`table`=#{quote(row.table)}
@@ -37,7 +37,7 @@ module CSVImporter
 
         query = <<-SQL.gsub(/[\n\t\s]+/, ' ')
           INSERT INTO
-          csv_importer_histories
+          #{history_table}
           (`reference`, `table`, `key`, `value`)
           VALUES
         SQL
@@ -64,6 +64,10 @@ module CSVImporter
         return true if @whitelist[table].nil? || @whitelist[table].empty?
         return true if @whitelist[table].map(&:to_s).include?(key.to_s)
         false
+      end
+
+      def history_table
+        @history_table ||= @options[:history_manager][:table] || "csv_importer_histories"
       end
 
       def connection

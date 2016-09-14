@@ -3,7 +3,7 @@ require "rails"
 
 module CSVImporter
   @config = {
-    file_loader: { loader: :file_system, path: "#{Rails.root}public/" },
+    file_loader: { loader: :file_system, relative_path: "public/" },
     history_manager: { manager: :active_record, table: "csv_importer_histories" },
     history_whitelisting: {},
     history_references: {}
@@ -13,6 +13,7 @@ module CSVImporter
     file_loader
     history_manager
     history_whitelisting
+    history_references
   ]
 
   # Configure through hash
