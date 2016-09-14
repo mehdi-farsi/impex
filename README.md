@@ -26,7 +26,10 @@ By default, `csv_importer` looks for CSV files in `public/csv_import/TABLE_NAME/
 
 Before the update of a field, `csv_importer` will check if csv column value has never been a value of the table field (e.g: Update the email only if has never been an email of the person).
 
-However, it's possible to custom the list of field to look up via a `whitelisting` [config](). 
+However, it's possible to custom the list of field to look up via a `whitelisting` [config](https://github.com/mehdi-farsi/csv_importer/blob/master/lib/generators/csv_importer/templates/csv_importer.rb). 
+
+By default, the reference field (a unique field that's used as identifier to search in history) corresponds to a field named `reference`.
+You can customize the reference for each tables in [config](https://github.com/mehdi-farsi/csv_importer/blob/master/lib/generators/csv_importer/templates/csv_importer.rb).
 
 # Tools
 
@@ -63,7 +66,7 @@ The project is based on the principle of "composition over inheritance". There i
 #### FileLoader
 
 The `FileLoader` is in charge of fetching and converting CSV files into a format that the `csv_importer` can consume.
-The project provide one file loader by default: `CSVImporter::FileLoader::FileSystem`.
+The project provides one file loader by default: `CSVImporter::FileLoader::FileSystem`.
 
 If you want to add a new `FileLoader` (e.g `FileLoader::FileLoader::S3`), you can create a new class that inherits from `CSVImporter::FileLoader::Base` and implements the instance method `#load` that returns an array of `CSVImporter::File`.
 
@@ -72,7 +75,7 @@ In order to ease the convertion of the CSV file to a format that is consumable b
 #### HistoryManager
 
 The `HistoryManager` is in charge of filter csv columns by maintaining an history of the value used in past for each column.
-The project provide one history manager by default: `CSVImporter::HistoryManager::ActiveRecord`.
+The project provides one history manager by default: `CSVImporter::HistoryManager::ActiveRecord`.
 
 If you want to add a new `HistoryManager` (e.g `FileLoader::HistoryManager::Redis`), you can create a new class that inherits from `CSVImporter::HistoryManager::Base` and implements the instance methods `#filter_data_with_history(row)` and `#update_history(row)`.
 
