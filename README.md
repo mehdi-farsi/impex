@@ -1,4 +1,4 @@
-# CsvImporter
+# Impex
 
 ## Installation
 
@@ -70,7 +70,7 @@ The project provides one file loader by default: `Impex::FileLoader::FileSystem`
 
 If you want to add a new `FileLoader` (e.g `FileLoader::FileLoader::S3`), you can create a new class that inherits from `Impex::FileLoader::Base` and implements the instance method `#load` that returns an array of `Impex::File`.
 
-In order to ease the convertion of the CSV file to a format that is consumable by the `impex`, the project provides a `Impex::FileFormatter.build(INSTANCE_OF_FILE_CLASS)` method that takes an instance of the ruby `File` class anf returns a `Impex::File`.
+In order to ease the convertion of the CSV file to a format that is consumable by the `impex`, the project provides an `Impex::FileFormatter.build(INSTANCE_OF_FILE_CLASS)` method that takes an instance of the ruby `File` class anf returns an `Impex::File` instance.
 
 #### HistoryManager
 
