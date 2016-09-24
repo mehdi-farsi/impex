@@ -7,7 +7,7 @@ Gem::Specification.new do |spec|
   spec.name          = "csv_importer"
   spec.version       = CSVImporter::VERSION
   spec.date          = Time.now.strftime("%F")
-  spec.authors       = ["Mehdi FARSI"]
+  spec.authors       = ["mehdi-farsi"]
   spec.email         = ["mehdifarsi.pro@gmail.com"]
 
   spec.summary       = "An idempotent CSV import system"
