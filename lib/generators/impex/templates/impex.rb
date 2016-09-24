@@ -1,6 +1,6 @@
-require "csv_importer"
+require "impex"
 
-# CSVImporter.configure({
+# Impex.configure({
 #   history_whitelisting: {
 #     buildings: [:manager_name],
 #     people:    [:email, :phone_number, :cell_phone, :address]

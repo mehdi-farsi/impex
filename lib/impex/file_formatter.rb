@@ -3,7 +3,7 @@ require_relative "row.rb"
 
 require "csv"
 
-module CSVImporter
+module Impex
   class FileFormatter
     class << self
       def build(csv_file)
@@ -12,10 +12,10 @@ module CSVImporter
           table: table
         }
 
-        file = CSVImporter::File.new(csv_file, file_config)
+        file = Impex::File.new(csv_file, file_config)
 
         ::CSV.read(csv_file, headers: true).each do |row|
-          file << CSVImporter::Row.new(row.to_h, file_config)
+          file << Impex::Row.new(row.to_h, file_config)
         end
         file
       end

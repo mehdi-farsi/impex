@@ -1,4 +1,4 @@
-module CSVImporter
+module Impex
   module HistoryManager
     class Base
       def initialize(options = {})
@@ -7,7 +7,7 @@ module CSVImporter
       end
 
       def load
-        raise CSVImporter::HistoryLoader::UnknownHistoryLoaderError
+        raise Impex::HistoryLoader::UnknownHistoryLoaderError
       end
     end
   end

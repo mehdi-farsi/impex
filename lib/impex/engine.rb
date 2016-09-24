@@ -1,18 +1,17 @@
-module CSVImporter
+module Impex
   class Engine
     def initialize(options = {})
     end
 
     def run(&block)
-      @config = CSVImporter.config
+      @config = Impex.config
 
-      @lookup = CSVImporter::Lookup.new(@config)
+      @lookup = Impex::Lookup.new(@config)
 
       @files_loader    = @lookup.file_loader
       @history_manager = @lookup.history_manager
 
       @files = @files_loader.load
-      byebug
 
       @files.each do |file|
         model = file.table
@@ -44,7 +43,7 @@ module CSVImporter
 
     class << self
       def run(options = {}, &block)
-        CSVImporter::Engine.new(options).run(&block)
+        Impex::Engine.new(options).run(&block)
       end
     end
   end

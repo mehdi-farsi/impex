@@ -1,4 +1,4 @@
-module CSVImporter
+module Impex
   class Row
     attr_reader :table, :columns
 

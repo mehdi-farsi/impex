@@ -6,23 +6,23 @@ class EngineTest < Minitest::Test
 
   def teardown
     Building.delete_all
-    CSVImporter::Lookup.unstub(:file_loader)
-    CSVImporter::Lookup.unstub(:history_manager)
+    Impex::Lookup.unstub(:file_loader)
+    Impex::Lookup.unstub(:history_manager)
   end
 
   def test_methods_called_in_run_method
-    lookup = CSVImporter::Lookup.new(config_test)
-    file   = CSVImporter::File.new(File.join(File.expand_path(__FILE__), "data/buildings/4242.csv"), table: "buildings")
+    lookup = Impex::Lookup.new(config_test)
+    file   = Impex::File.new(File.join(File.expand_path(__FILE__), "data/buildings/4242.csv"), table: "buildings")
 
 
-    CSVImporter.expects(:config).returns(config_test)
-    CSVImporter::Lookup.expects(:new).returns(lookup)
+    Impex.expects(:config).returns(config_test)
+    Impex::Lookup.expects(:new).returns(lookup)
 
-    CSVImporter::Lookup.any_instance.expects(:file_loader).returns(CSVImporter::FileLoader::FileSystem.new(config_test[:file_loader]))
-    CSVImporter::Lookup.any_instance.expects(:history_manager).returns(CSVImporter::HistoryManager::ActiveRecord.new(config_test))
+    Impex::Lookup.any_instance.expects(:file_loader).returns(Impex::FileLoader::FileSystem.new(config_test[:file_loader]))
+    Impex::Lookup.any_instance.expects(:history_manager).returns(Impex::HistoryManager::ActiveRecord.new(config_test))
 
-    CSVImporter::FileLoader::FileSystem.any_instance.expects(:load).returns([file])
+    Impex::FileLoader::FileSystem.any_instance.expects(:load).returns([file])
 
-    CSVImporter::Engine.run
+    Impex::Engine.run
   end
 end

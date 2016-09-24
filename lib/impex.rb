@@ -1,9 +1,9 @@
-require "csv_importer/configuration"
-require "csv_importer/engine"
-require "csv_importer/lookup"
-require "csv_importer/version"
+require "impex/configuration"
+require "impex/engine"
+require "impex/lookup"
+require "impex/version"
 
-module CSVImporter
+module Impex
   if defined?(Rails)
     class Railtie < Rails::Railtie
       rake_tasks do

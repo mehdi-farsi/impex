@@ -1,6 +1,6 @@
-namespace :csv_importer do
+namespace :impex do
   desc "Import all files"
   task :all => :environment do
-    CSVImporter::Engine.run
+    Impex::Engine.run
   end
 end

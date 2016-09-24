@@ -9,7 +9,7 @@ end
 
 require "active_support/hash_with_indifferent_access"
 
-module CSVImporter
+module Impex
   class Lookup
     attr_reader :config, :file_loaders, :history_managers
 
@@ -35,7 +35,7 @@ module CSVImporter
     def lookup_for_file_loader
       klass = @file_loaders[@config[:file_loader][:loader]]
 
-      raise CSVImporter::FileLoader::UnknownFileLoaderError,
+      raise Impex::FileLoader::UnknownFileLoaderError,
             "undefined class #{@config[:file_loader][:loader].to_s.camelize}" if klass.nil?
 
       klass.new(@config[:file_loader])
@@ -44,7 +44,7 @@ module CSVImporter
     def lookup_for_history_manager
       klass = @history_managers[@config[:history_manager][:manager]]
 
-      raise CSVImporter::HistoryManager::UnknownHistoryManagerError,
+      raise Impex::HistoryManager::UnknownHistoryManagerError,
             "undefined class #{@config[:history_manager][:manager].to_s.camelize}" if klass.nil?
 
       klass.new(@config)
@@ -54,7 +54,7 @@ module CSVImporter
       ::Dir.glob(::File.join(::File.dirname(__FILE__), 'file_loaders/*.rb')).each do |file|
         /(?<klass>\w+)\.rb/ =~ file
 
-        @file_loaders[klass] = "::CSVImporter::FileLoader::#{klass.camelize}".constantize
+        @file_loaders[klass] = "::Impex::FileLoader::#{klass.camelize}".constantize
       end
     end
 
@@ -62,7 +62,7 @@ module CSVImporter
       ::Dir.glob(::File.join(::File.dirname(__FILE__), 'history_managers/*.rb')).each do |file|
         /(?<klass>\w+)\.rb/ =~ file
 
-        @history_managers[klass] = "::CSVImporter::HistoryManager::#{klass.camelize}".constantize
+        @history_managers[klass] = "::Impex::HistoryManager::#{klass.camelize}".constantize
       end
     end
   end

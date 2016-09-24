@@ -1,17 +1,17 @@
 # coding: utf-8
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'csv_importer/version'
+require 'impex/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "csv_importer"
-  spec.version       = CSVImporter::VERSION
+  spec.name          = "impex"
+  spec.version       = Impex::VERSION
   spec.date          = Time.now.strftime("%F")
   spec.authors       = ["mehdi-farsi"]
   spec.email         = ["mehdifarsi.pro@gmail.com"]
 
   spec.summary       = "An idempotent CSV import system"
-  spec.homepage      = "https://github.com/mehdi-farsi/csv_importer"
+  spec.homepage      = "https://github.com/mehdi-farsi/impex"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }

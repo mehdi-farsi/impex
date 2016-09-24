@@ -8,7 +8,7 @@ require 'active_support'
 require "minitest/reporters"
 require 'mocha/setup'
 
-require 'csv_importer'
+require 'impex'
 
 
 Minitest::Reporters.use!
@@ -33,7 +33,7 @@ end
 def config_test
   @config ||= {
     file_loader: { loader: :file_system, path: "data/" },
-    history_manager: { manager: :active_record, table: "csv_importer_histories" },
+    history_manager: { manager: :active_record, table: "impex_histories" },
     history_whitelisting: {}
   }
 end

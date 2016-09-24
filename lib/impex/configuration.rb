@@ -1,10 +1,10 @@
 require "yaml"
 require "rails"
 
-module CSVImporter
+module Impex
   @config = {
     file_loader: { loader: :file_system, relative_path: "public/" },
-    history_manager: { manager: :active_record, table: "csv_importer_histories" },
+    history_manager: { manager: :active_record, table: "impex_histories" },
     history_whitelisting: {},
     history_references: {}
   }

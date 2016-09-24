@@ -1,6 +1,6 @@
 require_relative "row.rb"
 
-module CSVImporter
+module Impex
   class File
     extend  Forwardable
     def_delegators :@rows, :each, :[], :<<

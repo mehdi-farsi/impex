@@ -1,6 +1,6 @@
 require_relative "../history_manager/base.rb"
 
-module CSVImporter
+module Impex
   module HistoryManager
     class ActiveRecord < Base
       def filter_data_with_history(row)
@@ -67,7 +67,7 @@ module CSVImporter
       end
 
       def history_table
-        @history_table ||= @options[:history_manager][:table] || "csv_importer_histories"
+        @history_table ||= @options[:history_manager][:table] || "impex_histories"
       end
 
       def connection

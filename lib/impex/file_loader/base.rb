@@ -1,6 +1,6 @@
 require_relative "errors.rb"
 
-module CSVImporter
+module Impex
   module FileLoader
     class Base
       def initialize(options = {})
@@ -8,7 +8,7 @@ module CSVImporter
       end
 
       def load
-        raise CSVImporter::FileLoader::UnknownFileLoaderError
+        raise Impex::FileLoader::UnknownFileLoaderError
       end
     end
   end
