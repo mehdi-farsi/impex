@@ -15,21 +15,21 @@ And then execute:
 ## Usage
 
 ```ruby
-?> rails g impex:install
-?> rake db:migrate
-?> rake impex:all
+? rails g impex:install
+? rake db:migrate
+? rake impex:all
 ```
 
 ## How it Works
 
-By default, `impex` looks for CSV files in `public/csv_import/TABLE_NAME/*.csv`. `TABLE_NAME` stands for the name of table (e.g: `users`, ...). Each file may require a header that contains the exact name of the field. If it's not the case, a [hook]() is provided to re-organize the mapping of the file before check. 
+By default, `impex` looks for CSV files in `public/csv_import/TABLE_NAME/*.csv`. `TABLE_NAME` stands for the name of table (e.g.: `users`, ...). Each file may require a header that contains the exact name of the field. If it's not the case, a [hook]() is provided to re-organize the mapping of the file before checking. 
 
 Before the update of a field, `impex` will check if csv column value has never been a value of the table field (e.g: Update the email only if has never been an email of the person).
 
-However, it's possible to custom the list of field to look up via a `whitelisting` [config](https://github.com/mehdi-farsi/impex/blob/master/lib/generators/impex/templates/impex.rb). 
+However, it's possible to custom the list of fields to look up via a `whitelisting` [config](https://github.com/mehdi-farsi/impex/blob/master/lib/generators/impex/templates/impex.rb). 
 
-By default, the reference field (a unique field that's used as identifier to search in history) corresponds to a field named `reference`.
-You can customize the reference for each tables in [config](https://github.com/mehdi-farsi/impex/blob/master/lib/generators/impex/templates/impex.rb).
+By default, the reference field (a unique field that's used asan  identifier to search in history) corresponds to a field named `reference`.
+You can customize the reference for each table in [config](https://github.com/mehdi-farsi/impex/blob/master/lib/generators/impex/templates/impex.rb).
 
 # Tools
 
@@ -43,7 +43,7 @@ $ rails g impex:install
   create  db/migrate/20160831080017_create_impex_histories.rb
 ```
 
-The `impex.rb` initializer permits to manage the path of the CSV files and the whitelisting for the history.
+The `impex.rb` initializer permits the management of the path of the CSV files and the whitelisting for the history.
 
 ```ruby
 Impex.configure({
@@ -79,7 +79,7 @@ The project provides one history manager by default: `Impex::HistoryManager::Act
 
 If you want to add a new `HistoryManager` (e.g `FileLoader::HistoryManager::Redis`), you can create a new class that inherits from `Impex::HistoryManager::Base` and implements the instance methods `#filter_data_with_history(row)` and `#update_history(row)`.
 
-Once a new `FileLoader` or `HistoryManager` is added to the project then you can choose it by providing a config (configs name have to be in `underscore` syntax)
+Once a new `FileLoader` or `HistoryManager` is added to the project then you can choose it by providing a config (configs must be in `underscore` syntax)
 
 ```ruby
 file_loader: { loader: :s3, path: "#{Rails.root}public/" },
